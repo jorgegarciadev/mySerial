@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # coding: UTF-8
 
-# code extracted from nigiri
 
 import datetime
 import sys
@@ -20,17 +19,6 @@ class ExtendedListBox(urwid.ListBox):
     """
 
     __metaclass__ = urwid.MetaSignals
-    # signals = ["set_auto_scroll"]
-
-
-    # def set_auto_scroll(self, switch):
-    #     if type(switch) != bool:
-    #         return
-    #     self._auto_scroll = switch
-    #     urwid.emit_signal(self, "set_auto_scroll", switch)
-
-
-    # auto_scroll = property(lambda s: s._auto_scroll, set_auto_scroll)
 
 
     def __init__(self, body):
@@ -67,31 +55,6 @@ class ExtendedListBox(urwid.ListBox):
             # at bottom -> scroll down
             self.set_focus(len(self.body)-1)
 
-
-
-"""
- -------context-------
-| --inner context---- |
-|| HEADER            ||
-||                   ||
-|| BODY              ||
-||                   ||
-|| DIVIDER           ||
-| ------------------- |
-| FOOTER              |
- ---------------------
-
-inner context = context.body
-context.body.body = BODY
-context.body.header = HEADER
-context.body.footer = DIVIDER
-context.footer = FOOTER
-
-HEADER = Notice line (urwid.Text)
-BODY = Extended ListBox
-DIVIDER = Divider with information (urwid.Text)
-FOOTER = Input line (Ext. Edit)
-"""
 
 
 class MainWindow(object):
@@ -160,8 +123,7 @@ class MainWindow(object):
             Start mainloop.
         """
 
-        # I don't know what the callbacks are for yet,
-        # it's a code taken from the nigiri project
+
         def input_cb(key):
             if self.shall_quit:
                 raise urwid.ExitMainLoop
@@ -219,7 +181,7 @@ class MainWindow(object):
             Call the widget methods to build the UI 
         """
 
-        self.header = urwid.Text(" mySerial")
+        self.header = urwid.Text(" mySerial" + " " + FILE + " " + BAUDRATE)
         self.footer = urwid.Edit("> ")
         self.divider = urwid.Text("Initializing.")
 
@@ -296,18 +258,7 @@ class MainWindow(object):
         self.print_text('[%s][sent] - %s' % (self.get_time(), text))
         self.moo.write(text+nl)
  
- 
-    # def print_received_message(self, text):
-    #     """
-    #         Print a sent message
-    #     """
 
-    #     header = urwid.Text('[%s] System:' % self.get_time())
-    #     header.set_align_mode('right')
-    #     self.print_text(header)
-    #     text = urwid.Text(text)
-    #     text.set_align_mode('right')
-    #     self.print_text(text)
 
     def print_received_message(self, text):
         text = text.strip()
@@ -339,23 +290,6 @@ class MainWindow(object):
         return datetime.datetime.now().strftime('%H:%M:%S')
         
 
-# def except_hook(extype, exobj, extb, manual=False):
-#     if not manual:
-#         try:
-#             main_window.quit(exit=False)
-#         except NameError:
-#             pass
-
-#     message = _("An error occured:\n%(divider)s\n%(traceback)s\n"\
-#         "%(exception)s\n%(divider)s" % {
-#             "divider": 20*"-",
-#             "traceback": "".join(traceback.format_tb(extb)),
-#             "exception": extype.__name__+": "+str(exobj)
-#         })
-
-#     logging.error(message)
-
-#     print >> sys.stderr, message
 
 
 if __name__ == "__main__":
