@@ -299,7 +299,7 @@ if __name__ == "__main__":
     Arduino IDE and Stino. It's has been thought to be used via Secure Shell.
 
     '''
-    epilog = 'Press ESC to exit the program. '
+    epilog = 'Press ESC to exit the program. Use up, down page up and page down to scroll.'
     parser = argparse.ArgumentParser(description = description,
         epilog = epilog)
     parser.add_argument('port',
