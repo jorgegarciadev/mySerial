@@ -11,6 +11,7 @@ from urwid import MetaSignals
 
 FILE = '/dev/tty.usbmodem1411'
 BAUDRATE = 9600
+NEWLINE = ("CRLF", "LF", "CR")
 
 
 class ExtendedListBox(urwid.ListBox):
@@ -181,7 +182,7 @@ class MainWindow(object):
             Call the widget methods to build the UI 
         """
 
-        self.header = urwid.Text(" mySerial" + " " + FILE + " " + BAUDRATE)
+        self.header = urwid.Text(" mySerial" + " " + FILE + " " + BAUDRATE + " " + end)
         self.footer = urwid.Edit("> ")
         self.divider = urwid.Text("Initializing.")
 
@@ -332,10 +333,13 @@ if __name__ == "__main__":
 
     if parsed.cr:
         nl = '\r'
+        end = NEWLINE[2]
     elif parsed.lf:
         nl = '\n'
+        end = NEWLINE[1]
     else:
         nl = '\r\n'
+        end = NEWLINE[0]
     try:
         main_window = MainWindow()
         main_window.main()
