@@ -222,7 +222,7 @@ class MainWindow(object):
         urwid.emit_signal(self, "keypress", size, key)
 
         # scroll the top panel
-        if key in ("page up","page down"):
+        if key in ("page up","page down", "up", "down"):
             self.body.keypress (size, key)
 
         # resize the main windows
@@ -295,11 +295,11 @@ class MainWindow(object):
 
 if __name__ == "__main__":
     description = '''
-    mySerial is an Urwid based serial monitor tool similar to the included on 
+    mySerial is an Urwid based serial monitor tool similar to the one included on 
     Arduino IDE and Stino. It's has been thought to be used via Secure Shell.
 
     '''
-    epilog = 'Press ESC to exit the program.'
+    epilog = 'Press ESC to exit the program. '
     parser = argparse.ArgumentParser(description = description,
         epilog = epilog)
     parser.add_argument('port',
