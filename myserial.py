@@ -89,7 +89,7 @@ class MainWindow(object):
 
     def __init__(self):
         self.shall_quit = False
-        self.moo = serial.Serial(FILE, BAUDRATE)
+        self.moo = serial.serial_for_url(FILE)
         time.sleep(1)
         self.rec = threading.Thread(target=self.reciver)
         self.rec.daemon = True
@@ -316,12 +316,17 @@ if __name__ == "__main__":
     parser.add_argument('-cr',
         action='store_true',
         default = False,
-        help = "do not send CR+LF, send CR only"
+        help = "do not send CR+LF, send CR only."
     )
     parser.add_argument('-lf',
         action='store_true',
         default = False,
-        help = "do not send CR+LF, send LR only"
+        help = "do not send CR+LF, send LR only."
+    )
+    parser.add_argument('-s',
+        action='store_true',
+        default = False,
+        help = "Connect to a raw socket. User should provide IP and port separated by ':'."
     )
     # parser.add_argument('-qt'
     #     action = 'store_true',
@@ -330,8 +335,12 @@ if __name__ == "__main__":
     # )
 
     parsed = parser.parse_args()
-    FILE = parsed.port
-    BAUDRATE = parsed.baudrate
+    if parsed.s:
+        FILE = "socket://" + parsed.port
+        BAUDRATE = parsed.baudrate
+    else:    
+        FILE = parsed.port
+        BAUDRATE = parsed.baudrate
 
     if parsed.cr:
         nl = '\r'
@@ -342,9 +351,12 @@ if __name__ == "__main__":
     else:
         nl = '\r\n'
         end = NEWLINE[0]
-    try:
-        main_window = MainWindow()
-        main_window.main()
-    except Exception, e:
-        print "\033[91mError:\033[0m' %s\n" % e
-        sys.exit(1)
+    # try:
+    #     main_window = MainWindow()
+    #     main_window.main()
+    # except Exception, e:
+    #     print "\033[91mError:\033[0m' %s\n" % e
+    #     sys.exit(1)
+
+    main_window = MainWindow()
+    main_window.main()
