@@ -89,7 +89,7 @@ class MainWindow(object):
 
     def __init__(self):
         self.shall_quit = False
-        self.moo = serial.serial_for_url(FILE)
+        self.moo = serial.serial_for_url(FILE, BAUDRATE)
         time.sleep(1)
         self.rec = threading.Thread(target=self.reciver)
         self.rec.daemon = True
@@ -182,7 +182,7 @@ class MainWindow(object):
             Call the widget methods to build the UI 
         """
 
-        self.header = urwid.Text(" mySerial" + " " + FILE + " " + BAUDRATE + " " + end)
+        self.header = urwid.Text(" mySerial" + " " + FILE + " " + str(BAUDRATE) + " " + end)
         self.footer = urwid.Edit("> ")
         self.divider = urwid.Text("Initializing.")
 
