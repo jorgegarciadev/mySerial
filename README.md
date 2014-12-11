@@ -6,7 +6,7 @@
 
 mySerial is an Urwid based serial monitor tool similar to the included on Arduino IDE and Stino. It's has been thought to be used via *Secure Shell*.
 
-Requires **Urwid** and **pySerial** to work.
+Requires **Urwid** and **pySerial** to work. If you have any problem receiving data from a socket update pySerial to the latest version.
 
 Press ESC to exit.
 
@@ -23,7 +23,7 @@ Press ESC to exit.
 
 mySerial es un monitor de puerto serie basado en **Urwid** muy parecido al incluido en Arduino IDE and Stino. Ha sido pensado para ser usado a través de *Secure Shell*.
 
-Necesita **Urwid** y **pySerial** para funcionar.
+Necesita **Urwid** y **pySerial** para funcionar. Si tienes problemas al recibir datos desde un socket instala la versión más reciente de pySerial.
 
 Tecla ESC para salir.
 
