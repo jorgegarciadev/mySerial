@@ -112,7 +112,7 @@ class MainWindow(object):
         while self.rec.on:
             try:
                 recv = self.moo.readline()
-                if len(recv) != 0:
+                if len(recv) > 0:
                     self.print_received_message(recv)
             except:
                 pass
