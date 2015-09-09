@@ -89,13 +89,15 @@ class MainWindow(object):
 
     def __init__(self):
         self.shall_quit = False
-        self.moo = serial.serial_for_url(FILE, BAUDRATE)
-        time.sleep(1)
-        self.rec = threading.Thread(target=self.reciver)
-        self.rec.daemon = True
-        self.rec.on = True
-        
-        self.rec.start()
+        if parsed.ws:
+            pass
+        else:
+            self.moo = serial.serial_for_url(FILE, BAUDRATE)
+            time.sleep(1)
+            self.rec = threading.Thread(target=self.serialReciver)
+            self.rec.daemon = True
+            self.rec.on = True
+            self.rec.start()
 
 
     def main(self):
@@ -108,7 +110,7 @@ class MainWindow(object):
         self.build_interface()
         self.ui.run_wrapper(self.run)
 
-    def reciver(self):
+    def serialReciver(self):
         while self.rec.on:
             try:
                 recv = self.moo.readline()
@@ -329,6 +331,12 @@ if __name__ == "__main__":
         default = False,
         help = "Connect to a raw socket. User should provide IP and port separated by ':'."
     )
+    parser.add_argument('-ws',
+        action='store_true',
+        default = False,
+        help = "Connect to a  WebSocket. User should provide IP and port separated by ':'."
+    )
+
     # parser.add_argument('-qt'
     #     action = 'store_true',
     #     default = False,
