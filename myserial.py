@@ -90,7 +90,6 @@ class MainWindow(object):
 
     def __init__(self):
         self.shall_quit = False
-        try:
         if parsed.ws:
             self.moo = create_connection(FILE)
             time.sleep(1)
@@ -363,6 +362,7 @@ if __name__ == "__main__":
     # )
 
     parsed = parser.parse_args()
+
     if parsed.s:
         FILE = "socket://" + parsed.port
     elif parsed.ws:
@@ -383,12 +383,9 @@ if __name__ == "__main__":
     else:
         nl = '\r\n'
         end = NEWLINE[0]
-    # try:
-    #     main_window = MainWindow()
-    #     main_window.main()
-    # except Exception, e:
-    #     print "\033[91mError:\033[0m' %s\n" % e
-    #     sys.exit(1)
-
-    main_window = MainWindow()
-    main_window.main()
+    try:
+        main_window = MainWindow()
+        main_window.main()
+    except Exception, e:
+        print "\033[91mError:\033[0m %s\n" % e
+        sys.exit(1)
