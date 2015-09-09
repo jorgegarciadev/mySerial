@@ -8,6 +8,7 @@ import serial, threading, argparse, time
 
 import urwid
 from urwid import MetaSignals
+from websocket import create_connection
 
 FILE = '/dev/tty.usbmodem1411'
 BAUDRATE = 9600
@@ -89,15 +90,18 @@ class MainWindow(object):
 
     def __init__(self):
         self.shall_quit = False
+        try:
         if parsed.ws:
-            pass
+            self.moo = create_connection(FILE)
+            time.sleep(1)
+            self.rec = threading.Thread(target=self.webSocketReceiver)
         else:
             self.moo = serial.serial_for_url(FILE, BAUDRATE)
             time.sleep(1)
             self.rec = threading.Thread(target=self.serialReciver)
-            self.rec.daemon = True
-            self.rec.on = True
-            self.rec.start()
+        self.rec.daemon = True
+        self.rec.on = True
+        self.rec.start()
 
 
     def main(self):
@@ -116,6 +120,13 @@ class MainWindow(object):
                 recv = self.moo.readline()
                 if len(recv) > 0:
                     self.print_received_message(recv)
+            except:
+                pass
+    def webSocketReceiver(self):
+        while self.rec.on:
+            try:
+                recv = self.moo.recv()
+                self.print_received_message(recv)
             except:
                 pass
 
@@ -260,7 +271,10 @@ class MainWindow(object):
         """
 
         self.print_text('[%s][sent] - %s' % (self.get_time(), text))
-        self.moo.write(text+nl)
+        if parsed.ws:
+            self.moo.send(text+nl)
+        else:
+            self.moo.write(text+nl)
  
 
 
@@ -326,6 +340,11 @@ if __name__ == "__main__":
         default = False,
         help = "do not send CR+LF, send LR only."
     )
+    parser.add_argument('-nn',
+        action='store_true',
+        default = False,
+        help = "do not add endline characters."
+    )
     parser.add_argument('-s',
         action='store_true',
         default = False,
@@ -346,10 +365,11 @@ if __name__ == "__main__":
     parsed = parser.parse_args()
     if parsed.s:
         FILE = "socket://" + parsed.port
-        BAUDRATE = parsed.baudrate
+    elif parsed.ws:
+        FILE = "ws://" + parsed.port
     else:    
         FILE = parsed.port
-        BAUDRATE = parsed.baudrate
+    BAUDRATE = parsed.baudrate
 
     if parsed.cr:
         nl = '\r'
@@ -357,6 +377,9 @@ if __name__ == "__main__":
     elif parsed.lf:
         nl = '\n'
         end = NEWLINE[1]
+    elif parsed.nn:
+        nl = ''
+        end = ''
     else:
         nl = '\r\n'
         end = NEWLINE[0]
