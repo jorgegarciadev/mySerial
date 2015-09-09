@@ -94,6 +94,10 @@ class MainWindow(object):
             self.moo = create_connection(FILE)
             time.sleep(1)
             self.rec = threading.Thread(target=self.webSocketReceiver)
+        elif parsed.wss:
+            self.moo = create_connection(FILE, sslopt={"check_hostname": False})
+            time.sleep(1)
+            self.rec = threading.Thread(target=self.webSocketReceiver)
         else:
             self.moo = serial.serial_for_url(FILE, BAUDRATE)
             time.sleep(1)
@@ -352,7 +356,12 @@ if __name__ == "__main__":
     parser.add_argument('-ws',
         action='store_true',
         default = False,
-        help = "Connect to a  WebSocket. User should provide IP and port separated by ':'."
+        help = "Connect to a WebSocket. User should provide IP and port separated by ':'."
+    )
+    parser.add_argument('-wss',
+        action='store_true',
+        default = False,
+        help = "Connect to a Secure WebSocket (ssl). User should provide IP and port separated by ':'."
     )
 
     # parser.add_argument('-qt'
@@ -367,6 +376,8 @@ if __name__ == "__main__":
         FILE = "socket://" + parsed.port
     elif parsed.ws:
         FILE = "ws://" + parsed.port
+    elif parsed.wss:
+        FILE = "wss://" + parsed.port
     else:    
         FILE = parsed.port
     BAUDRATE = parsed.baudrate
@@ -383,9 +394,12 @@ if __name__ == "__main__":
     else:
         nl = '\r\n'
         end = NEWLINE[0]
-    try:
-        main_window = MainWindow()
-        main_window.main()
-    except Exception, e:
-        print "\033[91mError:\033[0m %s\n" % e
-        sys.exit(1)
+    # try:
+    #     main_window = MainWindow()
+    #     main_window.main()
+    # except Exception, e:
+    #     print "\033[91mError:\033[0m %s\n" % e
+    #     sys.exit(1)
+
+    main_window = MainWindow()
+    main_window.main()
