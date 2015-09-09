@@ -4,7 +4,7 @@
 
 ####English
 
-mySerial is an Urwid based serial monitor tool similar to the included on Arduino IDE and Stino. It's has been thought to be used via *Secure Shell*. Supports local and remote ports using ```serial.serial_for_url```, Also WebSockets (not ssl connections yet).
+mySerial is an Urwid based serial monitor tool similar to the included on Arduino IDE and Stino. It's has been thought to be used via *Secure Shell*. Supports local and remote ports using ```serial.serial_for_url```, also WebSockets (not ssl connections yet).
 
 Requires **Urwid**, **websecket-client** and **pySerial** to work. There is included a ```requirements.txt``` file for installing the dependencies:
 
