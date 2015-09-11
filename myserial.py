@@ -275,7 +275,7 @@ class MainWindow(object):
         """
 
         self.print_text('[%s][sent] - %s' % (self.get_time(), text))
-        if parsed.ws:
+        if parsed.ws or parsed.wss:
             self.moo.send(text+nl)
         else:
             self.moo.write(text+nl)
@@ -395,9 +395,12 @@ if __name__ == "__main__":
     else:
         nl = '\r\n'
         end = NEWLINE[0]
-    try:
-        main_window = MainWindow()
-        main_window.main()
-    except Exception, e:
-        print "\033[91mError:\033[0m %s\n" % e
-        sys.exit(1)
+    # try:
+    #     main_window = MainWindow()
+    #     main_window.main()
+    # except Exception, e:
+    #     print "\033[91mError:\033[0m %s\n" % e
+    #     sys.exit(1)
+
+    main_window = MainWindow()
+    main_window.main()
