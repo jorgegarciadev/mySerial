@@ -29,7 +29,7 @@ Press ESC to exit.
 
 ####Español
 
-mySerial es un monitor de puerto serie basado en **Urwid** muy parecido al incluido en Arduino IDE and Stino. Ha sido pensado para ser usado a través de *Secure Shell*. Soporta conexiones locales y remotas, también soporta WebSockets (sin conexiones seguras todavía).
+mySerial es un monitor de puerto serie basado en **Urwid** muy parecido al incluido en Arduino IDE and Stino. Ha sido pensado para ser usado a través de *Secure Shell*. Soporta conexiones locales y remotas, también soporta WebSockets.
 
 Necesita **Urwid**, **websecket-client** y **pySerial** para funcionar.
 

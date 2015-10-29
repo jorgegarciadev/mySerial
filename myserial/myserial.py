@@ -13,7 +13,8 @@ from websocket import create_connection
 FILE = '/dev/tty.usbmodem1411'
 BAUDRATE = 9600
 NEWLINE = ("CRLF", "LF", "CR")
-
+ws = None
+wss = None
 
 class ExtendedListBox(urwid.ListBox):
     """
@@ -88,13 +89,13 @@ class MainWindow(object):
             _palette.append( (type + name, color, bg) )
 
 
-    def __init__(self):
+    def __init__(self, FILE, BAUDRATE, nl, end):
         self.shall_quit = False
-        if parsed.ws:
+        if ws:
             self.moo = create_connection(FILE)
             time.sleep(1)
             self.rec = threading.Thread(target=self.webSocketReceiver)
-        elif parsed.wss:
+        elif wss:
             self.moo = create_connection(FILE, sslopt={"check_hostname": False})
             time.sleep(1)
             self.rec = threading.Thread(target=self.webSocketReceiver)
@@ -105,7 +106,8 @@ class MainWindow(object):
         self.rec.daemon = True
         self.rec.on = True
         self.rec.start()
-
+        self.nl = nl
+        self.end = end
 
     def main(self):
         """ 
@@ -201,7 +203,7 @@ class MainWindow(object):
             Call the widget methods to build the UI 
         """
 
-        self.header = urwid.Text(" mySerial" + " " + FILE + " " + str(BAUDRATE) + " " + end)
+        self.header = urwid.Text(" mySerial" + " " + FILE + " " + str(BAUDRATE) + " " + self.end)
         self.footer = urwid.Edit("> ")
         self.divider = urwid.Text("Initializing.")
 
@@ -276,9 +278,9 @@ class MainWindow(object):
 
         self.print_text('[%s][sent] - %s' % (self.get_time(), text))
         if parsed.ws or parsed.wss:
-            self.moo.send(text+nl)
+            self.moo.send(text+self.nl)
         else:
-            self.moo.write(text+nl)
+            self.moo.write(text+self.nl)
  
 
 
@@ -378,14 +380,18 @@ def main():
   # )
 
   parsed = parser.parse_args()
+
   if parsed.s:
       FILE = "socket://" + parsed.port
   elif parsed.ws:
+      ws = True
       FILE = "ws://" + parsed.port
   elif parsed.wss:
+      wss = True
       FILE = "wss://" + parsed.port
   else:    
       FILE = parsed.port
+
 
   BAUDRATE = parsed.baudrate
 
@@ -408,7 +414,7 @@ def main():
   # except Exception, e:
   #     print "\033[91mError:\033[0m %s\n" % e
   #     sys.exit(1)
-  main_window = MainWindow()
+  main_window = MainWindow(FILE, BAUDRATE, nl, end)
   main_window.main()
 
 
