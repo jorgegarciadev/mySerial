@@ -121,6 +121,7 @@ class MainWindow(object):
         while self.rec.on:
             try:
                 recv = self.moo.readline()
+                time.sleep(0.1)
                 if len(recv) > 0:
                     self.print_received_message(recv)
             except:
@@ -261,7 +262,6 @@ class MainWindow(object):
 
             if text.strip():
                 self.print_sent_message(text)
-                # self.print_received_message('Answer')
         elif key == 'esc':
             self.quit()
 
@@ -311,96 +311,106 @@ class MainWindow(object):
         """
         return datetime.datetime.now().strftime('%H:%M:%S')
         
+def main():
+  description = '''
+  mySerial is an Urwid based serial monitor tool similar to the one included on 
+  Arduino IDE and Stino. It's has been thought to be used via Secure Shell.
+  '''
 
+  epilog = 'Press ESC to exit the program. Use up, down page up and page down to scroll.'
+
+  parser = argparse.ArgumentParser(description = description,
+      epilog = epilog)
+
+  parser.add_argument('port',
+      action='store',
+      help = "port, a number or a device name.",
+      default = None
+      )
+
+  parser.add_argument('-b',
+      action='store',
+      dest='baudrate',
+      help = "set baud rate, default 9600",
+      default=9600
+  )
+
+  parser.add_argument('-cr',
+      action='store_true',
+      default = False,
+      help = "do not send CR+LF, send CR only."
+  )
+
+  parser.add_argument('-lf',
+      action='store_true',
+      default = False,
+      help = "do not send CR+LF, send LR only."
+  )
+
+  parser.add_argument('-nn',
+      action='store_true',
+      default = False,
+      help = "do not add endline characters."
+  )
+
+  parser.add_argument('-s',
+      action='store_true',
+      default = False,
+      help = "Connect to a raw socket. User should provide IP and port separated by ':'."
+  )
+
+  parser.add_argument('-ws',
+      action='store_true',
+      default = False,
+      help = "Connect to a WebSocket. User should provide IP and port separated by ':'."
+  )
+
+  parser.add_argument('-wss',
+      action='store_true',
+      default = False,
+      help = "Connect to a Secure WebSocket (ssl). User should provide IP and port separated by ':'."
+  )
+
+  # parser.add_argument('-qt'
+  #     action = 'store_true',
+  #     default = False,
+  #     help = "Loads a QT based interface"
+  # )
+
+  parsed = parser.parse_args()
+  if parsed.s:
+      FILE = "socket://" + parsed.port
+  elif parsed.ws:
+      FILE = "ws://" + parsed.port
+  elif parsed.wss:
+      FILE = "wss://" + parsed.port
+  else:    
+      FILE = parsed.port
+
+  BAUDRATE = parsed.baudrate
+
+  if parsed.cr:
+      nl = '\r'
+      end = NEWLINE[2]
+  elif parsed.lf:
+      nl = '\n'
+      end = NEWLINE[1]
+  elif parsed.nn:
+      nl = ''
+      end = ''
+  else:
+      nl = '\r\n'
+      end = NEWLINE[0]
+
+  # try:
+  #     main_window = MainWindow()
+  #     main_window.main()
+  # except Exception, e:
+  #     print "\033[91mError:\033[0m %s\n" % e
+  #     sys.exit(1)
+  main_window = MainWindow()
+  main_window.main()
 
 
 if __name__ == "__main__":
-    description = '''
-    mySerial is an Urwid based serial monitor tool similar to the one included on 
-    Arduino IDE and Stino. It's has been thought to be used via Secure Shell.
-
-    '''
-    epilog = 'Press ESC to exit the program. Use up, down page up and page down to scroll.'
-    parser = argparse.ArgumentParser(description = description,
-        epilog = epilog)
-    parser.add_argument('port',
-        action='store',
-        help = "port, a number or a device name.",
-        default = None
-        )
-    parser.add_argument('-b',
-        action='store',
-        dest='baudrate',
-        help = "set baud rate, default 9600",
-        default=9600
-    )
-    parser.add_argument('-cr',
-        action='store_true',
-        default = False,
-        help = "do not send CR+LF, send CR only."
-    )
-    parser.add_argument('-lf',
-        action='store_true',
-        default = False,
-        help = "do not send CR+LF, send LR only."
-    )
-    parser.add_argument('-nn',
-        action='store_true',
-        default = False,
-        help = "do not add endline characters."
-    )
-    parser.add_argument('-s',
-        action='store_true',
-        default = False,
-        help = "Connect to a raw socket. User should provide IP and port separated by ':'."
-    )
-    parser.add_argument('-ws',
-        action='store_true',
-        default = False,
-        help = "Connect to a WebSocket. User should provide IP and port separated by ':'."
-    )
-    parser.add_argument('-wss',
-        action='store_true',
-        default = False,
-        help = "Connect to a Secure WebSocket (ssl). User should provide IP and port separated by ':'."
-    )
-
-    # parser.add_argument('-qt'
-    #     action = 'store_true',
-    #     default = False,
-    #     help = "Loads a QT based interface"
-    # )
-
-    parsed = parser.parse_args()
-
-    if parsed.s:
-        FILE = "socket://" + parsed.port
-    elif parsed.ws:
-        FILE = "ws://" + parsed.port
-    elif parsed.wss:
-        FILE = "wss://" + parsed.port
-    else:    
-        FILE = parsed.port
-    BAUDRATE = parsed.baudrate
-
-    if parsed.cr:
-        nl = '\r'
-        end = NEWLINE[2]
-    elif parsed.lf:
-        nl = '\n'
-        end = NEWLINE[1]
-    elif parsed.nn:
-        nl = ''
-        end = ''
-    else:
-        nl = '\r\n'
-        end = NEWLINE[0]
-    # try:
-    #     main_window = MainWindow()
-    #     main_window.main()
-    # except Exception, e:
-    #     print "\033[91mError:\033[0m %s\n" % e
-    #     sys.exit(1)
-
-    main_window = MainWindow()
-    main_window.main()
+  main()
