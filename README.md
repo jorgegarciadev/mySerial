@@ -4,11 +4,14 @@
 
 ####English
 
-mySerial is an Urwid based serial monitor tool similar to the included on Arduino IDE and Stino. It's has been thought to be used via *Secure Shell*. Supports local and remote ports using ```serial.serial_for_url```, also WebSockets (not ssl connections yet).
+mySerial is an Urwid based serial monitor tool similar to the included on Arduino IDE and Stino. It's has been thought to be used via *Secure Shell*. Supports local and remote ports using ```serial.serial_for_url```, also WebSockets.
 
-Requires **Urwid**, **websecket-client** and **pySerial** to work. There is included a ```requirements.txt``` file for installing the dependencies:
+Requires **Urwid**, **websecket-client** and **pySerial** to work.
 
-```pip install -r requirements.txt```
+Installing:
+
+```pip install git+https://github.com/jorgegarciadev/mySerial.git```
+
 
 
 If you have any problem receiving data from a socket update pySerial to the latest version.
@@ -28,9 +31,11 @@ Press ESC to exit.
 
 mySerial es un monitor de puerto serie basado en **Urwid** muy parecido al incluido en Arduino IDE and Stino. Ha sido pensado para ser usado a través de *Secure Shell*. Soporta conexiones locales y remotas, también soporta WebSockets (sin conexiones seguras todavía).
 
-Necesita **Urwid**, **websecket-client** y **pySerial** para funcionar. Incluye un archivo ```requirements.txt``` para instalar las dependencias:
+Necesita **Urwid**, **websecket-client** y **pySerial** para funcionar.
 
-```pip install -r requirements.txt```
+Para instalarlo:
+
+```pip install git+https://github.com/jorgegarciadev/mySerial.git```
 
 
 Si tienes problemas al recibir datos desde un socket instala la versión más reciente de pySerial.
