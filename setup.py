@@ -24,7 +24,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'myserial=myserial:main'
+            'myserial=myserial.myserial:main'
         ],
     }
 )
