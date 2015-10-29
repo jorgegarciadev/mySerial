@@ -13,8 +13,6 @@ from websocket import create_connection
 FILE = '/dev/tty.usbmodem1411'
 BAUDRATE = 9600
 NEWLINE = ("CRLF", "LF", "CR")
-ws = None
-wss = None
 
 class ExtendedListBox(urwid.ListBox):
     """
@@ -89,13 +87,14 @@ class MainWindow(object):
             _palette.append( (type + name, color, bg) )
 
 
-    def __init__(self, FILE, BAUDRATE, nl, end):
+    def __init__(self, FILE, BAUDRATE, conn, nl, end):
         self.shall_quit = False
-        if ws:
+        self.conn = conn
+        if self.conn == 0:
             self.moo = create_connection(FILE)
             time.sleep(1)
             self.rec = threading.Thread(target=self.webSocketReceiver)
-        elif wss:
+        elif self.conn == 1:
             self.moo = create_connection(FILE, sslopt={"check_hostname": False})
             time.sleep(1)
             self.rec = threading.Thread(target=self.webSocketReceiver)
@@ -277,7 +276,7 @@ class MainWindow(object):
         """
 
         self.print_text('[%s][sent] - %s' % (self.get_time(), text))
-        if ws or wss:
+        if self.conn == 0 or self.conn == 1:
             self.moo.send(text+self.nl)
         else:
             self.moo.write(text+self.nl)
@@ -380,14 +379,14 @@ def main():
   # )
 
   parsed = parser.parse_args()
-
+  conn = 2
   if parsed.s:
       FILE = "socket://" + parsed.port
   elif parsed.ws:
-      ws = True
+      conn = 0
       FILE = "ws://" + parsed.port
   elif parsed.wss:
-      wss = True
+      conn = 1
       FILE = "wss://" + parsed.port
   else:    
       FILE = parsed.port
@@ -414,7 +413,7 @@ def main():
   # except Exception, e:
   #     print "\033[91mError:\033[0m %s\n" % e
   #     sys.exit(1)
-  main_window = MainWindow(FILE, BAUDRATE, nl, end)
+  main_window = MainWindow(FILE, BAUDRATE, conn, nl, end)
   main_window.main()
 
 
