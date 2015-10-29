@@ -277,7 +277,7 @@ class MainWindow(object):
         """
 
         self.print_text('[%s][sent] - %s' % (self.get_time(), text))
-        if parsed.ws or parsed.wss:
+        if ws or wss:
             self.moo.send(text+self.nl)
         else:
             self.moo.write(text+self.nl)
