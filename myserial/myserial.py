@@ -10,9 +10,6 @@ import urwid
 from urwid import MetaSignals
 from websocket import create_connection
 
-FILE = '/dev/tty.usbmodem1411'
-BAUDRATE = 9600
-NEWLINE = ("CRLF", "LF", "CR")
 
 class ExtendedListBox(urwid.ListBox):
     """
@@ -41,16 +38,13 @@ class ExtendedListBox(urwid.ListBox):
         urwid.ListBox.keypress(self, size, key)
 
         if key in ("page up", "page down"):
-            # logging.debug("focus = %d, len = %d" % (self.get_focus()[1], len(self.body)))
             if self.get_focus()[1] == len(self.body)-1:
                 self.auto_scroll = True
             else:
                 self.auto_scroll = False
-            # logging.debug("auto_scroll = %s" % (self.auto_scroll))
 
 
     def scroll_to_bottom(self):
-        # logging.debug("current_focus = %s, len(self.body) = %d" % (self.get_focus()[1], len(self.body)))
 
         if self.auto_scroll:
             # at bottom -> scroll down
@@ -87,8 +81,10 @@ class MainWindow(object):
             _palette.append( (type + name, color, bg) )
 
 
-    def __init__(self, FILE, BAUDRATE, conn, nl, end):
+    def __init__(self, FILE, BAUDRATE=9600, conn=None, nl='\r\n'):
         self.shall_quit = False
+        self.file = FILE
+        self.baudrate = BAUDRATE
         self.conn = conn
         if self.conn == 0:
             self.moo = create_connection(FILE)
@@ -102,11 +98,21 @@ class MainWindow(object):
             self.moo = serial.serial_for_url(FILE, BAUDRATE)
             time.sleep(1)
             self.rec = threading.Thread(target=self.serialReciver)
+
+        self.nl = nl
+        if nl == '\r\n':
+          self.end = "CRLF"
+        elif nl == '\r':
+          self.end = 'CR'
+        elif nl == '\n':
+          self.end = 'LF'
+        elif nl == '':
+          self.end = nl
+
         self.rec.daemon = True
         self.rec.on = True
         self.rec.start()
-        self.nl = nl
-        self.end = end
+        
 
     def main(self):
         """ 
@@ -202,7 +208,7 @@ class MainWindow(object):
             Call the widget methods to build the UI 
         """
 
-        self.header = urwid.Text(" mySerial" + " " + FILE + " " + str(BAUDRATE) + " " + self.end)
+        self.header = urwid.Text(" mySerial" + " " + self.file + " " + str(self.baudrate) + " " + self.end)
         self.footer = urwid.Edit("> ")
         self.divider = urwid.Text("Initializing.")
 
@@ -396,25 +402,22 @@ def main():
 
   if parsed.cr:
       nl = '\r'
-      end = NEWLINE[2]
   elif parsed.lf:
       nl = '\n'
-      end = NEWLINE[1]
   elif parsed.nn:
       nl = ''
-      end = ''
   else:
       nl = '\r\n'
-      end = NEWLINE[0]
 
-  # try:
-  #     main_window = MainWindow()
-  #     main_window.main()
-  # except Exception, e:
-  #     print "\033[91mError:\033[0m %s\n" % e
-  #     sys.exit(1)
-  main_window = MainWindow(FILE, BAUDRATE, conn, nl, end)
-  main_window.main()
+  try:
+      main_window = MainWindow(FILE, BAUDRATE, conn, nl)
+      main_window.main()
+  except Exception, e:
+      print "\033[91mError:\033[0m %s\n" % e
+      sys.exit(1)
+
+  # main_window = MainWindow(FILE, BAUDRATE, conn, nl)
+  # main_window.main()
 
 
 if __name__ == "__main__":
