@@ -412,8 +412,8 @@ def main():
   try:
       main_window = MainWindow(FILE, BAUDRATE, conn, nl)
       main_window.main()
-  except Exception, e:
-      print "\033[91mError:\033[0m %s\n" % e
+  except Exception as e:
+      print("\033[91mError:\033[0m %s\n" % e)
       sys.exit(1)
 
   # main_window = MainWindow(FILE, BAUDRATE, conn, nl)
