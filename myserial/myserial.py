@@ -131,16 +131,16 @@ class MainWindow(object):
                 time.sleep(0.1)
                 if len(recv) > 0:
                     self.print_received_message(recv)
-            except:
-                pass
+            except Exception as e:
+                self.print_text('[%s][error] - %s' % (self.get_time(), e))
     def webSocketReceiver(self):
         while self.rec.on:
             try:
                 recv = self.moo.recv()
                 time.sleep(0.1)
                 self.print_received_message(recv)
-            except:
-                pass
+            except Exception as e:
+                self.print_text('[%s][error] - %s' % (self.get_time(), e))
 
     def run(self):
         """ 
