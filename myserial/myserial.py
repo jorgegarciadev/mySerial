@@ -10,6 +10,7 @@ import urwid
 from urwid import MetaSignals
 from websocket import create_connection
 
+main_window = None
 
 class ExtendedListBox(urwid.ListBox):
     """
@@ -133,6 +134,8 @@ class MainWindow(object):
                     self.print_received_message(recv)
             except Exception as e:
                 self.print_text('[%s][error] - %s' % (self.get_time(), e))
+                self.draw_interface()
+                main_window.quit()
     def webSocketReceiver(self):
         while self.rec.on:
             try:
@@ -141,6 +144,8 @@ class MainWindow(object):
                 self.print_received_message(recv)
             except Exception as e:
                 self.print_text('[%s][error] - %s' % (self.get_time(), e))
+                self.draw_interface()
+                main_window.quit()
 
     def run(self):
         """ 
@@ -410,6 +415,7 @@ def main():
       nl = '\r\n'
 
   try:
+      global main_window
       main_window = MainWindow(FILE, BAUDRATE, conn, nl)
       main_window.main()
   except Exception as e:
