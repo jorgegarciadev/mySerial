@@ -128,7 +128,7 @@ class MainWindow(object):
     def serialReciver(self):
         while self.rec.on:
             try:
-                recv = self.moo.readline()
+                recv = self.lineread()
                 time.sleep(0.1)
                 if len(recv) > 0:
                     self.print_received_message(recv)
@@ -322,6 +322,15 @@ class MainWindow(object):
             Return formated current datetime
         """
         return datetime.datetime.now().strftime('%H:%M:%S')
+
+    def lineread(self):
+      buffer = ""
+      while True:
+          oneByte = self.moo.read(1)
+          if oneByte == self.nl:
+              return buffer
+          else:
+              buffer += oneByte
         
 def main():
   description = '''
