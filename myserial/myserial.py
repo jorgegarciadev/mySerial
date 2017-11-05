@@ -128,7 +128,10 @@ class MainWindow(object):
     def serialReciver(self):
         while self.rec.on:
             try:
-                recv = self.lineread()
+                if self.nl == '\r\n':
+                  recv = self.moo.readline()
+                else:
+                  recv = self.lineread()
                 time.sleep(0.1)
                 if len(recv) > 0:
                     self.print_received_message(recv)
