@@ -1,6 +1,6 @@
-##mySerial
+##Totpy
 
-![captura.png](https://raw.githubusercontent.com/jorgegarciadev/mySerial/master/captura.png)
+![captura.png](https://raw.githubusercontent.com/jorgegarciadev/totpy/master/Screenshot.png)
 
 ####English
 

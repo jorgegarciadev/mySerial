@@ -134,7 +134,7 @@ class MainWindow(object):
                   recv = self.lineread()
                 time.sleep(0.1)
                 if len(recv) > 0:
-                    self.print_received_message(recv)
+                    self.print_received_message(recv.decode('UTF-8'))
             except Exception as e:
                 self.print_text('[%s][error] - %s' % (self.get_time(), e))
                 self.draw_interface()
@@ -290,10 +290,11 @@ class MainWindow(object):
         """
 
         self.print_text('[%s][sent] - %s' % (self.get_time(), text))
+        cmd = text+self.nl
         if self.conn == 0 or self.conn == 1:
-            self.moo.send(text+self.nl)
+            self.moo.send(cmd.encode())
         else:
-            self.moo.write(text+self.nl)
+            self.moo.write(cmd.encode())
  
 
 
@@ -426,16 +427,16 @@ def main():
   else:
       nl = '\r\n'
 
-  try:
-      global main_window
-      main_window = MainWindow(FILE, BAUDRATE, conn, nl)
-      main_window.main()
-  except Exception as e:
-      print("\033[91mError:\033[0m %s\n" % e)
-      sys.exit(1)
+  # try:
+  #     global main_window
+  #     main_window = MainWindow(FILE, BAUDRATE, conn, nl)
+  #     main_window.main()
+  # except Exception as e:
+  #     print("\033[91mError:\033[0m %s\n" % e)
+  #     sys.exit(1)
 
-  # main_window = MainWindow(FILE, BAUDRATE, conn, nl)
-  # main_window.main()
+  main_window = MainWindow(FILE, BAUDRATE, conn, nl)
+  main_window.main()
 
 
 if __name__ == "__main__":
